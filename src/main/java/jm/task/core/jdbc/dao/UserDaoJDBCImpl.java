@@ -20,48 +20,43 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        String SQL = "create table  IF NOT EXISTS users" +
-                "(id INTEGER not NULL, " +
-                "name  VARCHAR(50) not NULL, " +
-                "lastName VARCHAR(50) not NULL, " +
-                "age INTEGER not NULL, " +
-                "PRIMARY KEY (ID))";
-
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(SQL);
+            statement.executeUpdate("create table  IF NOT EXISTS users" +
+                    "(id INTEGER not NULL, " +
+                    "name  VARCHAR(50) not NULL, " +
+                    "lastName VARCHAR(50) not NULL, " +
+                    "age INTEGER not NULL, " +
+                    "PRIMARY KEY (ID))");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void dropUsersTable() {
-        String SQL = "drop table if exists users";
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(SQL);
+            statement.executeUpdate("drop table if exists users");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String SQL = String.format("insert into users (id, name, lastName, age) " +
-                "values (%d, '%s', '%s', %d)", count++, name, lastName, age);
         System.out.printf("User с именем – %s добавлен в базу данных\n", name);
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(SQL);
+            statement.executeUpdate(String.format("insert into users (id, name, lastName, age) " +
+                    "values (%d, '%s', '%s', %d)", count++, name, lastName, age));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void removeUserById(long id) {
-        String SQL = String.format("delete from users where id = %d", id);
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(SQL);
+            statement.executeUpdate(String.format("delete from users where id = %d", id));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,11 +64,10 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() {
-        String SQL = "select * from users";
         List<User> list = new ArrayList<>();
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(SQL);
+            ResultSet resultSet = statement.executeQuery("select * from users");
             while (resultSet.next()) {
                 long id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
@@ -90,10 +84,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        String SQL = "TRUNCATE TABLE users";
         try (Connection connection = util.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(SQL);
+            statement.executeUpdate("TRUNCATE TABLE users");
         } catch (SQLException e) {
             e.printStackTrace();
         }
