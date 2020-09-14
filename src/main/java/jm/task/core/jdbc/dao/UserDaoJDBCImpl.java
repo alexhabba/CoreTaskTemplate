@@ -16,7 +16,6 @@ public class UserDaoJDBCImpl implements UserDao {
     private  int count = 1;
 
     public UserDaoJDBCImpl() {
-
     }
 
     public void createUsersTable() {
